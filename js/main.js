@@ -120,21 +120,25 @@ var Song = Backbone.Model.extend();
 
 var SongView = Backbone.View.extend({
   events: {
-    "click": "onClick"
+    "click": "playSong",
+    "click .my-button": "bookMark"
   },
 
-  onCLick: function () {
-    console.log("hello this");
+  playSong: function (e) {
+    e.stopPropagation();
+    console.log("Song Playing");
   },
-
+  bookMark: function () {
+    console.log("Song Bookmarked");
+  },
   render: function () {
-    this.$el.html(this.model.get("title") + "<button>Listen</button>");
+    this.$el.html(this.model.get("title") + "<button>Listen</button>" + "<button class='my-button'>Bookmark</button>");
     return this;
   }
 });
 
 var mySong = new Song({
-  title: "Hello Hello"
+  title: "You say yes"
 });
 
 var mySongView = new SongView({
@@ -144,3 +148,38 @@ var mySongView = new SongView({
 
 mySongView.render();
 
+//HANDLING MODEL CHANGES
+
+var Song = Backbone.Model.extend({
+  defaults: {
+    listeners: 0
+  }
+});
+
+var SongView = Backbone.View.extend({
+  initialize: function () {
+    this.model.on("change", this.onModelChange, this);
+  },
+  render: function () {
+    this.$el.html(this.model.get("title") + " | Listeners " + this.model.get("listeners"));
+    return this;
+  },
+  onModelChange : function () {
+    console.log("you got a new listener");
+    this.$el.addClass("alert");
+    this.render();
+  }
+});
+
+var happy = new Song({
+  title: "Happy"
+});
+
+var happyView = new SongView({
+  el: "#model-changes",
+  model: happy
+});
+
+
+
+happyView.render();

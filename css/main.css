@@ -218,3 +218,8 @@ textarea {
         page-break-after: avoid;
     }
 }
+
+.alert{
+    color: white;
+    background-color: red;
+}
