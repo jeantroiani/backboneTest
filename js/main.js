@@ -180,6 +180,27 @@ var happyView = new SongView({
   model: happy
 });
 
-
-
 happyView.render();
+
+//HANDLING COLLECTION EVENTS
+
+var Post = Backbone.Model.extend();
+
+var PostView = Backbone.View.extend({
+  render: function () {
+    this.$el.html(this.model.get("message"));
+    return this;
+  }
+});
+
+var userPost = new Post({
+  message: "Hello."
+});
+
+var messageView = new PostView({
+  el: "#chat",
+  model: userPost
+});
+
+messageView.render();
+
