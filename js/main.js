@@ -193,14 +193,45 @@ var PostView = Backbone.View.extend({
   }
 });
 
-var userPost = new Post({
+var userMessage = new Post({
   message: "Hello."
 });
 
 var messageView = new PostView({
-  el: "#chat",
-  model: userPost
+  el: "#message",
+  model: userMessage
 });
 
 messageView.render();
+
+var PostCollection = Backbone.Collection.extend({
+  model: Post
+});
+
+var userMessage2 = new Post({
+  message: "Hi, how are you?."
+});
+
+var posts = [];
+posts.push(userMessage);
+posts.push(userMessage2);
+
+
+var messageCollection = new PostCollection(posts);
+
+var MessageCollectionView = Backbone.View.extend({
+  render: function () {
+    var self = this;
+    this.model.each(function (messg) {
+      $(self.el).append('<li>' + messg.get("message") + '</li>');
+    });
+  }
+});
+
+var chat = new MessageCollectionView({
+  el: "#chat",
+  model: messageCollection
+});
+
+chat.render();
 
