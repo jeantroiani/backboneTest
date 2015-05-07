@@ -212,6 +212,7 @@ var userMessage2 = new Post({
   message: "Hi, how are you?."
 });
 
+
 var posts = [];
 posts.push(userMessage);
 posts.push(userMessage2);
@@ -220,6 +221,12 @@ posts.push(userMessage2);
 var messageCollection = new PostCollection(posts);
 
 var MessageCollectionView = Backbone.View.extend({
+  initialize: function () {
+    this.model.on("add", this.addMessage, this);
+  },
+  addMessage: function () {
+    console.log("new message appeared");
+  },
   render: function () {
     var self = this;
     this.model.each(function (messg) {
