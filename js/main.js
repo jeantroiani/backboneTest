@@ -194,6 +194,7 @@ var PostView = Backbone.View.extend({
 });
 
 var userMessage = new Post({
+  id: 0,
   message: "Hello."
 });
 
@@ -209,6 +210,7 @@ var PostCollection = Backbone.Collection.extend({
 });
 
 var userMessage2 = new Post({
+  id: 1,
   message: "Hi, how are you?."
 });
 
@@ -222,22 +224,30 @@ var messageCollection = new PostCollection(posts);
 
 var MessageCollectionView = Backbone.View.extend({
   initialize: function () {
-    this.model.on("add", this.addMessage, this);
+    console.log(this.$el);
+    this.listenTo(this.collection, "add", this.addMessage);
+    this.listenTo(this.collection, "remove", this.removeMessage);
   },
-  addMessage: function () {
+  addMessage: function (message) {
+    this.$el.append('<li id=' + message.id + '>' + message.get("message") + '</li>');
     console.log("new message appeared");
+  },
+  removeMessage: function (message) {
+    var id = message.get('id');
+    $('#'+ id).remove();
+    console.log("succesfully removed");
   },
   render: function () {
     var self = this;
-    this.model.each(function (messg) {
-      $(self.el).append('<li>' + messg.get("message") + '</li>');
+    this.collection.each(function (messg) {
+      $(self.el).append('<li id='+ messg.id +'>' + messg.get("message") + '</li>');
     });
   }
-});
+})
 
 var chat = new MessageCollectionView({
   el: "#chat",
-  model: messageCollection
+  collection: messageCollection                       //collection can be call whatever you want
 });
 
 chat.render();
